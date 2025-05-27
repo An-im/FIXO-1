@@ -13,13 +13,15 @@ import { getAuth } from 'firebase/auth';
 import { app } from '../../src/config/firebaseConfig';
 
 export default function AccountScreen() {
-  const { user } = useAuth();
+  const { user, logout } = useAuth();
   const navigation = useNavigation();
   const [userData, setUserData] = useState(null);
   const [imageURL, setImageURL] = useState(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+    if (!user) return;
+
     const fetchUserData = async () => {
       try {
         const ref = doc(db, 'users', user.uid);
@@ -28,12 +30,26 @@ export default function AccountScreen() {
           const data = snap.data();
           setUserData(data);
 
-          const thumbnail = data.photoURL?.includes("profileImages/")
-            ? data.photoURL.replace("profileImages/", "profileImages/thumbs_300x300/")
+          const fallbackURL = 'https://ui-avatars.com/api/?name=FIXO+User';
+          const thumbnail = data.photoURL?.includes('profileImages/')
+            ? data.photoURL.replace('profileImages/', 'profileImages/thumbs_300x300/')
             : data.photoURL;
 
-          await Image.prefetch(thumbnail);
-          setImageURL(thumbnail);
+          if (thumbnail && typeof thumbnail === 'string' && thumbnail.startsWith('http')) {
+            try {
+              const loaded = await Image.prefetch(thumbnail);
+              if (loaded) {
+                setImageURL(thumbnail);
+              } else {
+                setImageURL(fallbackURL);
+              }
+            } catch (imageError) {
+              console.error('Image prefetch failed:', imageError);
+              setImageURL(fallbackURL);
+            }
+          } else {
+            setImageURL(fallbackURL);
+          }
         }
       } catch (err) {
         console.error('Error loading user data:', err);
@@ -43,21 +59,29 @@ export default function AccountScreen() {
     };
 
     fetchUserData();
-  }, [user.uid]);
+  }, [user]);
 
   const handleLogout = () => {
-    const auth = getAuth(app);
     Alert.alert('Sign out', 'Are you sure?', [
       { text: 'Cancel', style: 'cancel' },
       {
         text: 'Log out',
         style: 'destructive',
         onPress: async () => {
-          await signOut(auth);
+          await logout();
         },
       },
     ]);
   };
+
+  // 👇 Acá sí va el return condicional
+  if (!user) {
+    return (
+      <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+        <Text>You are not logged in.</Text>
+      </View>
+    );
+  }
 
   if (loading) {
     return (
@@ -66,6 +90,7 @@ export default function AccountScreen() {
       </View>
     );
   }
+
 
   return (
     <ImageBackground

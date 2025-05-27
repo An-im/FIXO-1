@@ -21,7 +21,7 @@ export function AuthProvider({ children }) {
 
         if (docSnap.exists()) {
           const data = docSnap.data();
-          if (data.email === 'applications@wearefixo.com') {
+          if (data.role === 'admin') {
             setRole('admin');
           } else if (data.isProfessional && data.applicationStatus === 'approved') {
             setRole('professional');

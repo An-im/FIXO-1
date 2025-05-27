@@ -9,7 +9,7 @@ import SignUpScreen from '../../screens/auth/SignUpScreen';
 import ForgotPasswordScreen from '../../screens/auth/ForgotPasswordScreen';
 import ApplicationPending from '../../screens/user/ApplicationPending';
 import UserStackNavigator from './UserStackNavigator';
-import AdminHome from '../../screens/admin/AdminHome';
+import AdminStackNavigator from './AdminStackNavigator'; // ✅ este es nuevo
 import ProfessionalDashboard from '../../screens/professional/ProfessionalDashboard';
 
 const Stack = createStackNavigator();
@@ -36,7 +36,7 @@ export default function MainNavigator() {
         ) : role === 'pending' ? (
           <Stack.Screen name="ApplicationPending" component={ApplicationPending} />
         ) : role === 'admin' ? (
-          <Stack.Screen name="Admin" component={AdminHome} />
+          <Stack.Screen name="Admin" component={AdminStackNavigator} /> 
         ) : null}
       </Stack.Navigator>
     </NavigationContainer>
