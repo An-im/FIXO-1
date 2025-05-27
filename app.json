@@ -30,7 +30,8 @@
     "extra": {
       "eas": {
         "projectId": "affaab99-7cc1-42c3-aba9-6a702641931d"
-      }
+      },
+      "expoPublicGoogleMapsApiKey": "AIzaSyBccaSgwhlnWSUngkYYb9-gQdXKjD55bUc"
     }
   }
 }
