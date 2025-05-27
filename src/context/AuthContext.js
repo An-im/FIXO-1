@@ -1,8 +1,7 @@
 import React, { createContext, useContext, useEffect, useState } from 'react';
-import { onAuthStateChanged } from 'firebase/auth';
+import { onAuthStateChanged, signOut, getAuth } from 'firebase/auth';
 import { doc, getDoc } from 'firebase/firestore';
-import { auth } from '../config/firebaseConfig';
-import { db } from '../config/firebaseConfig';
+import { auth, db, app } from '../config/firebaseConfig';
 
 const AuthContext = createContext();
 
@@ -12,7 +11,6 @@ export function AuthProvider({ children }) {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-
     const unsubscribe = onAuthStateChanged(auth, async (firebaseUser) => {
       setLoading(true);
 
@@ -46,8 +44,16 @@ export function AuthProvider({ children }) {
     return unsubscribe;
   }, []);
 
+  // ✅ Centralizado el logout acá
+  const logout = async () => {
+    const authInstance = getAuth(app);
+    await signOut(authInstance);
+    setUser(null);
+    setRole('guest');
+  };
+
   return (
-    <AuthContext.Provider value={{ user, role, loading }}>
+    <AuthContext.Provider value={{ user, role, loading, logout }}>
       {children}
     </AuthContext.Provider>
   );
