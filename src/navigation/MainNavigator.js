@@ -3,22 +3,21 @@ import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import { useAuth } from '../context/AuthContext';
 
-// 👇 Acá irán tus pantallas reales
 import WelcomeScreen from '../../screens/auth/WelcomeScreen';
 import LoginScreen from '../../screens/auth/LoginScreen';
 import SignUpScreen from '../../screens/auth/SignUpScreen';
 import ForgotPasswordScreen from '../../screens/auth/ForgotPasswordScreen';
 import ApplicationPending from '../../screens/user/ApplicationPending';
-import UserNavigator from './UserNavigator'; // lo vas a crear después
+import UserStackNavigator from './UserStackNavigator';
 import AdminHome from '../../screens/admin/AdminHome';
 import ProfessionalDashboard from '../../screens/professional/ProfessionalDashboard';
 
 const Stack = createStackNavigator();
 
 export default function MainNavigator() {
-  const { user, role, loading } = useAuth();
+  const { role, loading } = useAuth();
 
-  if (loading) return null; // 🕒 Podés reemplazar por un SplashScreen
+  if (loading) return null;
 
   return (
     <NavigationContainer>
@@ -31,7 +30,7 @@ export default function MainNavigator() {
             <Stack.Screen name="ForgotPassword" component={ForgotPasswordScreen} />
           </>
         ) : role === 'user' ? (
-          <Stack.Screen name="User" component={UserNavigator} />
+          <Stack.Screen name="User" component={UserStackNavigator} />
         ) : role === 'professional' ? (
           <Stack.Screen name="Professional" component={ProfessionalDashboard} />
         ) : role === 'pending' ? (
