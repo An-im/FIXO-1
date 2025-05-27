@@ -7,7 +7,7 @@ import { useAuth } from '../context/AuthContext';
 import WelcomeScreen from '../../screens/auth/WelcomeScreen';
 import LoginScreen from '../../screens/auth/LoginScreen';
 import SignUpScreen from '../../screens/auth/SignUpScreen';
-
+import ForgotPasswordScreen from '../../screens/auth/ForgotPasswordScreen';
 import ApplicationPending from '../../screens/user/ApplicationPending';
 import UserNavigator from './UserNavigator'; // lo vas a crear después
 import AdminHome from '../../screens/admin/AdminHome';
@@ -28,6 +28,7 @@ export default function MainNavigator() {
             <Stack.Screen name="Welcome" component={WelcomeScreen} />
             <Stack.Screen name="Login" component={LoginScreen} />
             <Stack.Screen name="SignUp" component={SignUpScreen} />
+            <Stack.Screen name="ForgotPassword" component={ForgotPasswordScreen} />
           </>
         ) : role === 'user' ? (
           <Stack.Screen name="User" component={UserNavigator} />
